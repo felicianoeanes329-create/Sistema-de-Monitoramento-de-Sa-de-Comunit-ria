@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Registar Sintomas</title>
+
+  
+  <style>
+    .container { max-width: 880px; margin: 24px auto; font-family: Arial, sans-serif; }
+    h1 { margin-bottom: 12px;
+    color: #0d6efd; }
+    
+
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 12px; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+    .field label { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+    .field input, .field select { width: 100%; padding: 6px; }
+
+    .row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
+
+    .compact { max-width: 130px; }
+
+    /* Sintomas em colunas */
+    .sintomas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+      margin-top: 6px;
+    }
+    .sintomas label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    textarea { width: 100%; padding: 8px; }
+    .help { color: #666; font-size: 12px; margin-top: 4px; }
+
+    .actions { margin-top: 12px; display: flex; gap: 8px; }
+    button { padding: 8px 14px; background: #0d6efd; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #084dbf; }
+
+    /* Tema claro */
+    body.claro {
+      background-color: #f9f9f9;
+      color: #222;
+    }
+    body.claro .card {
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+
+    /* Tema escuro */
+    body.escuro {
+      background-color: #222;
+      color: #f9f9f9;
+    }
+    body.escuro .card {
+      background: #333;
+      border: 1px solid #555;
+    }
+    body.escuro h1 {
+      color: #0d6efd;
+    }
+    body.escuro button {
+      background: #555;
+      color: #fff;
+    }
+    body.escuro button:hover {
+      background: #777;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // Verifica se o utilizador está logado
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+
+  if (!auth.logged) {
+    // Se não estiver logado, redireciona para login
+    location.href = "login.html";
+  }
+</script>
+
+
+  <div class="container">
+    <h1>Registo de Sintomas</h1>
+
+    <form id="form-Regsintomas">
+      <!-- Identificação + Data -->
+      <div class="card">
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:44px;">
+          <div class="field">
+            <label for="paciente">Nome</label>
+            <input type="text" id="paciente" required>
+          </div>
+          <div class="field">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" required>
+              <option value="">Selecione...</option>
+              <option>Feminino</option>
+              <option>Masculino</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="idade">Idade</label>
+            <input type="number" id="idade" min="0" max="120" required class="compact">
+          </div>
+          <div class="field">
+            <label for="data">Data</label>
+            <input type="date" id="data" required class="compact">
+          </div>
+        </div>
+      </div>
+
+      <!-- Vitais -->
+      <div class="row">
+        <div class="card">
+          <div class="field">
+            <label for="temperatura">Temperatura (°C)</label>
+            <input type="number" id="temperatura" step="0.1" min="34" max="42" required placeholder="Ex.: 36.8" class="compact">
+          </div>
+          <div class="help">Registe com termómetro; use vírgula/ponto conforme o teclado.</div>
+        </div>
+      </div>
+
+      <!-- Sintomas -->
+      <div class="card" style="margin-top:10px;">
+        <label style="font-weight:bold; font-size:14px;">Sintomas</label>
+        <div class="sintomas">
+          <label><input type="checkbox" value="Falta de ar"> Falta de ar</label>
+          <label><input type="checkbox" value="Dor no peito"> Dor no peito</label>
+          <label><input type="checkbox" value="Tontura"> Tontura</label>
+          <label><input type="checkbox" value="Dor de cabeça"> Dor de cabeça</label>
+          <label><input type="checkbox" value="Tosse"> Tosse</label>
+          <label><input type="checkbox" value="Cansaço extremo"> Cansaço extremo</label>
+          <label><input type="checkbox" value="Febre percebida"> Febre percebida</label>
+          <label><input type="checkbox" value="Náuseas"> Náuseas</label>
+        </div>
+        <div class="field" style="margin-top:8px;">
+          <label for="outroSintoma" style="font-weight:normal;">Outro</label>
+          <input type="text" id="outroSintoma" placeholder="Escreva aqui">
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div class="card" style="margin-top:10px;">
+        <div class="field">
+          <label for="observacoes">Observações</label>
+          <textarea id="observacoes" rows="3" placeholder="Notas relevantes do profissional"></textarea>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="actions">
+        <button type="submit">Salvar</button>
+        <a href="index.html"><button type="button">Menu inicial</button></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Script para aplicar tema salvo -->
+  <script>
+    const tema = localStorage.getItem("tema");
+    if (tema) {
+      document.body.classList.add(tema);
+    } else {
+      document.body.classList.add("claro"); 
+    }
+  </script>
+
+  <script src="registrar-sintomas.js"></script>
+</body>
+</html>

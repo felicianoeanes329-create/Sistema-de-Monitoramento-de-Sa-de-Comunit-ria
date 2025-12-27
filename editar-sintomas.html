@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Sintomas</title>
+
+  <style>
+    .container { max-width: 880px; margin: 24px auto; font-family: Arial, sans-serif; }
+    h1 { margin-bottom: 12px; color: #084dbf; }
+
+    .card { border: 2px solid #0d6efd; border-radius: 8px; padding: 12px; background: #f1f5ff; }
+
+    .field { display: flex; flex-direction: column; }
+    .field label { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+    .field input, .field select { width: 100%; padding: 6px; }
+
+    .row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
+    .compact { max-width: 130px; }
+
+    .sintomas { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 6px; }
+    .sintomas label { display: flex; align-items: center; gap: 6px; line-height: 1.2; margin: 0; }
+
+    textarea { width: 100%; padding: 8px; }
+    .help { color: #666; font-size: 12px; margin-top: 4px; }
+
+    .actions { margin-top: 12px; display: flex; gap: 8px; }
+    button { padding: 8px 14px; background: #0d6efd; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #084dbf; }
+
+
+    body.claro {
+      background-color: #f9f9f9;
+      color: #222;
+    }
+    body.claro .card {
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+    body.escuro {
+      background-color: #222;
+      color: #f9f9f9;
+    }
+    body.escuro .card {
+      background: #333;
+      border: 1px solid #555;
+    }
+    body.escuro h1 {
+      color: #0d6efd;
+    }
+    body.escuro button {
+      background: #555;
+      color: #fff;
+    }
+    body.escuro button:hover {
+      background: #777;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // Verifica se o utilizador está logado
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+
+  if (!auth.logged) {
+    // Se não estiver logado, redireciona para login
+    location.href = "login.html";
+  }
+</script>
+
+  <div class="container">
+    <h1>Editar Sintomas</h1>
+
+    <form id="form-EditarSintomas">
+      <!-- Identificação + Data -->
+      <div class="card">
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:44px;">
+          <div class="field">
+            <label for="paciente">Nome</label>
+            <input type="text" id="paciente" required>
+          </div>
+          <div class="field">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" required>
+              <option value="">Selecione...</option>
+              <option>Feminino</option>
+              <option>Masculino</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="idade">Idade</label>
+            <input type="number" id="idade" min="0" max="120" required class="compact">
+          </div>
+          <div class="field">
+            <label for="data">Data</label>
+            <input type="date" id="data" required class="compact">
+          </div>
+        </div>
+      </div>
+
+      <!-- Vitais -->
+      <div class="row">
+        <div class="card">
+          <div class="field">
+            <label for="temperatura">Temperatura (°C)</label>
+            <input type="number" id="temperatura" step="0.1" min="34" max="42" required class="compact">
+          </div>
+          <div class="help">Registe com termómetro; use vírgula/ponto conforme o teclado.</div>
+        </div>
+      </div>
+
+      <!-- Sintomas -->
+      <div class="card" style="margin-top:10px;">
+        <label style="font-weight:bold; font-size:14px;">Sintomas</label>
+        <div class="sintomas">
+          <label><input type="checkbox" value="Falta de ar"> Falta de ar</label>
+          <label><input type="checkbox" value="Dor no peito"> Dor no peito</label>
+          <label><input type="checkbox" value="Tontura"> Tontura</label>
+          <label><input type="checkbox" value="Dor de cabeça"> Dor de cabeça</label>
+          <label><input type="checkbox" value="Tosse"> Tosse</label>
+          <label><input type="checkbox" value="Cansaço extremo"> Cansaço extremo</label>
+          <label><input type="checkbox" value="Febre percebida"> Febre percebida</label>
+          <label><input type="checkbox" value="Náuseas"> Náuseas</label>
+        </div>
+        <div class="field" style="margin-top:8px;">
+          <label for="outroSintoma" style="font-weight:normal;">Outro</label>
+          <input type="text" id="outroSintoma" placeholder="Escreva aqui">
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div class="card" style="margin-top:10px;">
+        <div class="field">
+          <label for="observacoes">Observações</label>
+          <textarea id="observacoes" rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="actions">
+        <button type="submit">Salvar alterações</button>
+        <a href="historico-sintomas.html"><button type="button">Voltar ao histórico</button></a>
+        <a href="index.html"><button type="button">Menu principal</button></a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+  // Aplica o tema salvo nas definições
+  const tema = localStorage.getItem("tema");
+  if (tema) {
+    document.body.classList.add(tema);
+  } else {
+    document.body.classList.add("claro"); // padrão inicial
+  }
+
+  // Função para calcular risco
+  function calcularRisco(temperatura, sintomas) {
+    temperatura = parseFloat(temperatura);
+
+    // Exemplo de regras (ajusta conforme tua lógica original)
+    if (temperatura >= 39 || sintomas.includes("Falta de ar") || sintomas.includes("Dor no peito")) {
+      return "Vermelho";
+    } else if (temperatura >= 37.5 || sintomas.includes("Febre percebida") || sintomas.includes("Tontura")) {
+      return "Amarelo";
+    } else {
+      return "Verde";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const registroEditar = localStorage.getItem("registroEditar");
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+    if (registroEditar === null || !registros[registroEditar]) {
+      alert("Acesso inválido! Selecione um registo para editar.");
+      window.location.href = "historico-sintomas.html";
+      return;
+    }
+
+    const reg = registros[registroEditar];
+    document.getElementById("paciente").value = reg.paciente;
+    document.getElementById("sexo").value = reg.sexo;
+    document.getElementById("idade").value = reg.idade;
+    document.getElementById("data").value = reg.data;
+    document.getElementById("temperatura").value = reg.temperatura;
+    document.getElementById("observacoes").value = reg.observacoes || "";
+
+    reg.sintomas.forEach(s => {
+      const cb = document.querySelector(`input[type="checkbox"][value="${s}"]`);
+      if (cb) cb.checked = true;
+    });
+
+    document.getElementById("form-EditarSintomas").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const sintomasSelecionados = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(cb => cb.value);
+      const outroSintoma = document.getElementById("outroSintoma").value.trim();
+      if (outroSintoma) sintomasSelecionados.push(outroSintoma);
+
+      const temperatura = document.getElementById("temperatura").value;
+
+      const atualizado = {
+        paciente: document.getElementById("paciente").value,
+        sexo: document.getElementById("sexo").value,
+        idade: document.getElementById("idade").value,
+        data: document.getElementById("data").value,
+        temperatura: temperatura,
+        risco: calcularRisco(temperatura, sintomasSelecionados), 
+        sintomas: sintomasSelecionados,
+        observacoes: document.getElementById("observacoes").value
+      };
+
+      registros[registroEditar] = atualizado;
+      localStorage.setItem("registros", JSON.stringify(registros));
+      localStorage.removeItem("registroEditar");
+
+      alert("Registo atualizado com sucesso!");
+      window.location.href = "historico-sintomas.html";
+    });
+  });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Monitoramento de Saúde Comunitária</title>
+  <link rel="stylesheet" href="style.css"> 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      position: relative; 
+      max-width: 1000%;
+      min-height: 80vh;
+      text-align: center;
+      padding: 20px 25px;
+      background: url("imagem.png") no-repeat center center;
+      background-size: cover;
+      color: #fff;
+    }
+
+    /* Overlay escuro só no modo escuro */
+    body.escuro .container::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6); 
+      z-index: 0;
+    }
+
+    .container * {
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      color: #0d6efd;
+      margin-bottom: 28px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;        
+      justify-content: center; 
+      gap: 10px;              
+      margin-top: 20px;
+    }
+
+    .actions button {
+      width: 100px;       
+      height: 38px;       
+      padding: 2px;       
+      background: rgba(13, 110, 253, 0.85);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8em;   
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+    }
+
+    .actions button:hover {
+      background: rgba(8, 77, 191, 0.9);
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // Verifica se o utilizador está logado
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+
+  if (!auth.logged) {
+    // Se não estiver logado, redireciona para login
+    location.href = "login.html";
+  }
+</script>
+
+  <div class="container">
+    <h1>Menu Principal</h1>
+
+    <script>
+      // Tema
+      const tema = localStorage.getItem("tema");
+      if (tema) {
+        document.body.classList.add(tema);
+      } else {
+        document.body.classList.add("claro"); 
+      }
+
+      // Recupera perfil do utilizador logado
+      const utilizadorLogado = JSON.parse(localStorage.getItem("utilizadorLogado"));
+    </script>
+
+    <div class="actions">
+      <a href="registrar-sintomas.html"><button>Registrar sintomas</button></a>
+      <a href="historico-sintomas.html" id="menuHistorico"><button>Ver histórico geral</button></a>
+      <a href="alertas.html"><button>Alertas</button></a>
+      <a href="relatorio.html"><button>Relatório</button></a>
+      <a href="gestao-utilizadores.html" id="menuGestao"><button>Gestão de Utilizadores</button></a>
+      <a href="configuracoes.html" id="menuConfig"><button>Configurações</button></a>
+      <a href="ajuda.html"><button>Ajuda</button></a>
+    </div>
+  </div>
+
+<script>
+  // Regras de permissões
+  if (utilizadorLogado) {
+    if (utilizadorLogado.perfil === "Usuario") {
+      document.getElementById("menuGestao").style.display = "none";
+      localStorage.setItem("restricaoConfig", "true");
+      console.log("Usuário logado: acesso limitado");
+    } else if (utilizadorLogado.perfil === "Administrador") {
+      localStorage.setItem("restricaoConfig", "false");
+      console.log("Administrador logado: acesso total");
+    }
+  } else {
+    document.querySelectorAll(".actions a").forEach(link => {
+      link.style.display = "none";
+    });
+    document.getElementById("menuGestao").style.display = "none";
+    document.getElementById("menuConfig").style.display = "none";
+    document.getElementById("menuHistorico").style.display = "none";
+    localStorage.setItem("restricaoConfig", "true");
+    console.log("Nenhum login: todos os menus restritos");
+  }
+</script>
+</body>
+</html>

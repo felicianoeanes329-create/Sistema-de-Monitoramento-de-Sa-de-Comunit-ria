@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Biblioteca jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<script>
+  // Verifica se o utilizador está logado
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+
+  if (!auth.logged) {
+    // Se não estiver logado, redireciona para login
+    location.href = "login.html";
+  }
+</script>
+
+
+  <div class="container">
+    <h1>Relatório</h1>
+
+    <script>
+      const tema = localStorage.getItem("tema");
+      if (tema) {
+        document.body.classList.add(tema);
+      } else {
+        document.body.classList.add("claro"); 
+      }
+    </script>
+
+    <div class="filtros card" style="margin-bottom:12px;">
+      <label>De: <input type="date" id="dataInicio"></label>
+      <label>Até: <input type="date" id="dataFim"></label>
+      <button onclick="gerarRelatorio()">Filtrar</button>
+      <button onclick="exportarPDF()">Exportar PDF</button>
+    </div>
+
+    <div id="estatisticas" class="card"></div>
+
+    <div class="actions">
+      <a href="index.html"><button>Menu principal</button></a>
+    </div>
+  </div>
+
+  <script src="relatorio.js"></script>
+</body>
+</html>

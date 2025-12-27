@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Alertas</title>
+  <link rel="stylesheet" href="style.css"> 
+<body>
+  <div class="container">
+    <h1>Alertas</h1>
+    
+
+    
+    <script>
+  const tema = localStorage.getItem("tema");
+  if (tema) {
+    document.body.classList.add(tema);
+  } else {
+    document.body.classList.add("claro"); 
+  }
+</script>
+
+
+    <!-- Barra superior com contador -->
+    <div class="top-bar">
+      <div id="contador" class="contador"></div>
+    </div>
+
+    <!-- Lista de alertas -->
+    <div id="lista-alertas"></div>
+
+    <div class="actions">
+      <a href="index.html"><button type="button">Menu inicial</button></a>
+    </div>
+  </div>
+
+  <script src="alertas.js"></script>
+</body>
+</html>
+
+

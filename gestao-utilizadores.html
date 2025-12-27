@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestão de Utilizadores</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+  // Verifica se o utilizador está logado
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+
+  if (!auth.logged) {
+    // Se não estiver logado, redireciona para login
+    location.href = "login.html";
+  }
+</script>
+
+<div class="container">
+  <h1>Gestão de Utilizadores</h1>
+
+  <script>
+    const tema = localStorage.getItem("tema");
+    if (tema) {
+      document.body.classList.add(tema);
+    } else {
+      document.body.classList.add("claro"); 
+    }
+  </script>
+
+  <!-- Formulário de cadastro/edição -->
+  <form id="formUtilizador" style="margin-bottom: 20px;">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="senha" placeholder="Senha" required>
+    <input type="password" id="confirmarSenha" placeholder="Confirmar Senha" required>
+    <select id="perfil" required>
+      <option value="">Selecione o perfil</option>
+      <option value="Administrador">Administrador</option>
+      <option value="Usuario">Usuário</option>
+    </select>
+
+    <!-- Botões de ação -->
+    <div style="margin-top: 10px;">
+      <button type="submit" id="btnCadastrar">Cadastrar</button>
+      <button type="button" id="btnEditar" style="display:none;">Editar</button>
+      <button type="button" id="btnCancelar" style="display:none;">Cancelar</button>
+    </div>
+  </form>
+
+  <!-- Lista de utilizadores -->
+  <table border="1" style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Perfil</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="listaUtilizadores">
+      <!-- Utilizadores aparecem aqui -->
+    </tbody>
+  </table>
+
+  <div style="margin-top: 20px; text-align: left;">
+    <button onclick="location.href='index.html'">Voltar ao Menu</button>
+  </div>
+</div>
+
+<script src="gestao-utilizadores.js"></script>
+</body>
+</html>
